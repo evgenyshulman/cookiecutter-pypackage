@@ -1,3 +1,5 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -52,8 +54,12 @@ coverage.xml
 # Django stuff:
 *.log
 
+#idea
+.idea
+
 # Sphinx documentation
 docs/_build/
+docs/api
 
 # PyBuilder
 target/
