@@ -1,4 +1,4 @@
-.PHONY: clean-pyc clean-build docs clean
+.PHONY: clean-pyc clean-build docs clean docs-open coverage coverage-open
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
 try:
@@ -21,6 +21,7 @@ help:
 	@echo "test-all - run tests on every Python version with tox"
 	@echo "coverage - check code coverage quickly with the default Python"
 	@echo "docs - generate Sphinx HTML documentation, including API docs"
+	@echo "docs-open - docs + open documentation in default browser"
 	@echo "release - package and upload a release"
 	@echo "dist - package"
 	@echo "install - install the package to the active Python's site-packages"
@@ -46,26 +47,24 @@ clean-test:
 	rm -fr htmlcov/
 
 lint:
-	flake8 {{ cookiecutter.project_slug }} tests
+	tox -e flake8
 
 test:
-	python setup.py test
+	py.test
 
 test-all:
 	tox
 
 coverage:
-	coverage run --source {{ cookiecutter.project_slug }} setup.py test
-	coverage report -m
-	coverage html
+	py.test --cov-report=html --cov={{ cookiecutter.project_slug }}  tests
+
+coverage-open: coverage
 	$(BROWSER) htmlcov/index.html
 
 docs:
-	rm -f docs/{{ cookiecutter.project_slug }}.rst
-	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ {{ cookiecutter.project_slug }}
-	$(MAKE) -C docs clean
-	$(MAKE) -C docs html
+	tox -e docs
+
+docs-open: docs
 	$(BROWSER) docs/_build/html/index.html
 
 servedocs: docs
